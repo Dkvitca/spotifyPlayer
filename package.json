@@ -1,0 +1,26 @@
+{
+  "name": "spotifyextension",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc && node esbuild.config.js",
+    "watch": "tsc -w",
+    "start": "npm run watch",
+    "build:prod": "tsc && NODE_ENV=production node esbuild.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@es-exec/esbuild-plugin-serve": "^0.0.5",
+    "@types/chrome": "^0.0.260",
+    "esbuild": "^0.20.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.90.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  }
+}

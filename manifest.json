@@ -1,0 +1,26 @@
+{
+    "manifest_version": 3,
+    "name": "Spotify Extension",
+    "version": "1.0",
+    "description": "Chrome extension to display currently played playback from Spotify",
+    "permissions": [
+      "activeTab", 
+      "storage",
+      "userScripts",
+      "identity",
+      "https://api.spotify.com/*",
+      "https://accounts.spotify.com/*"
+    ],
+    "background": {
+      "service_worker": "dist/background.js",
+      "type": "module"
+    },
+    "action": {
+      "default_popup": "./dist/popup/popup.html",
+      "default_icon": {
+        "16": "./public/images/icon.png",
+        "48": "./public/images/icon.png",
+        "128": "./public/images/icon.png"
+      }
+    }
+  }
