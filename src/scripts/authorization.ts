@@ -64,7 +64,7 @@
     }
   
 
-   async function refreshToken(refresh_token:string): Promise<any> {
+   export async function refreshToken(refresh_token:string): Promise<any> {
       const requestBody: { client_id: string; grant_type: string; refresh_token?: string } = {
         client_id: clientId,
         grant_type: 'refresh_token',
