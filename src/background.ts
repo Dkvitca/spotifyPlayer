@@ -1,11 +1,11 @@
 import { authorizeSpotify, getToken } from './scripts/authorization';
 import {App} from './scripts/app.js'
-
+import  {Storage} from './scripts/Storage'
 const app = new App();
 
-chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-    if (request.message === 'init app'){
-        app.render();    
+chrome.runtime.onMessage.addListener(async(req) => {
+    if (req.message === "render app"){
+        app.render();
     }
 });
 
@@ -31,18 +31,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
         if (code) {
           const tokenResponse = await getToken(code, code_verifier);
-
-          const tokenData = {
-            access_token: tokenResponse.access_token,
-            refresh_token: tokenResponse.refresh_token,
-            expires_in: tokenResponse.expires_in,
-            code: code,
-            code_verifier: code_verifier,
-          };
-
-          chrome.storage.local.set({ tokenData: tokenData }, () => {
-            console.log('Token data saved to storage:', tokenData);
-          });
+            Storage.set("access_token",tokenResponse.access_token);
+            Storage.set("refresh_token",tokenResponse.refresh_token);
+            Storage.set("expires_in",tokenResponse.expires_in);
+            Storage.set("code",code);
+            Storage.set("code_verifier",code_verifier);
+            Storage.set("is_login",true);
         } else {
           console.error('No code received in the redirect URL.');
         }
@@ -50,6 +44,5 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     );
   }
 
-  sendResponse({ redirectToPlayer: true });
-  chrome.action.setPopup({ popup: './dist/popup/player.html' });
+  chrome.action.setPopup({ popup: './dist/popup/player.html' }); //sets the player
 });

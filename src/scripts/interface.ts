@@ -1,9 +1,10 @@
-export interface TokenData {
+export interface UserInstance {
     access_token?: string;
     refresh_token?: string;
     expires_in?: number;
     code?: string;
     code_verifier?: string;
+    is_login?: boolean;
   }
   
 

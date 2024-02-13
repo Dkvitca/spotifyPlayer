@@ -1,4 +1,6 @@
-chrome.runtime.sendMessage({message: "init app"});
+
+  chrome.runtime.sendMessage({message: "render app"})
+
 
 function updateTrackInfo(trackInfo: any) {
     document.getElementById("trackName")!.innerText = trackInfo.title;
@@ -24,13 +26,13 @@ function updateTrackInfo(trackInfo: any) {
   // Example usage of the updateTrackInfo function
   chrome.runtime.onMessage.addListener(async (req)=>{
     if (req.message === 'updateUI')
-    console.log("trackInfo from player",req.trackInfo);
     updateTrackInfo(req.trackInfo);
     setTimer(req.trackInfo.durationMs,req.trackInfo.progressMs)
   });
   
   function setTimer(durationMs: number, progressMs: number) {
     const timer = setTimeout(async() => {
+      console.log("from timer calling to render app")
       clearTimeout(timer);
       chrome.runtime.sendMessage({message: "render app"});
     }, durationMs - progressMs);

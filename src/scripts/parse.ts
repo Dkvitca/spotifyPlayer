@@ -3,7 +3,6 @@ import {TrackInfo,Device,PlayPostData} from './interface'
 
  export function parseTrackInfo(rawDataString: any): TrackInfo {
     const rawData = rawDataString
-  
     const trackInfo: TrackInfo = {
       title: rawData.item.name,
       artist: {
@@ -18,16 +17,22 @@ import {TrackInfo,Device,PlayPostData} from './interface'
       durationMs: rawData.item.duration_ms,
       trackUrl: rawData.item.external_urls.spotify,
       id: rawData.item.id,
-      isSave: false, // You can set this based on your logic
-      context: {
-        type: rawData.context.type,
-        href: rawData.context.href,
-        externalUrls: rawData.context.external_urls,
-        uri: rawData.context.uri,
-      },
+      isSave: false,
     };
-  
-    return trackInfo;
+
+    let context;
+    if (rawData.context) {
+      const { type, href, external_urls, uri } = rawData.context;
+      context = {
+        type,
+        href,
+        uri,
+        externalUrls: external_urls,
+      };
+    }
+
+    const object = Object.assign(trackInfo, { context });
+    return object;
   }
 
   export function parseDevice(rawDataString: any): Device {
