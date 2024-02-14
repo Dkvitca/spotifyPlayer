@@ -3,15 +3,32 @@ import {App} from './scripts/app.js'
 import  {Storage} from './scripts/Storage'
 const app = new App();
 
-chrome.runtime.onMessage.addListener(async(req) => {
-    if (req.message === "render app"){
+chrome.runtime.onMessage.addListener(async (req, sender, sendResponse) => {
+    switch (req.message) {
+      case "render app":
         app.render();
+        break;
+      case "next":
+        await app.nextTrack();
+        break;
+      case "previous":
+        await app.prevTrack();
+        break;
+      case "play":
+        await app.playTrack();
+        break;
+      case "pause":
+        await app.pauseTrack();
+      default:
+        // Handle other messages if needed
+        break;
     }
-});
+  });
+
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.message === 'authorizeSpotify') {
-    chrome.storage.local.clear();
+    //chrome.storage.local.clear();
 
     const { code_verifier, authUrl } = await authorizeSpotify();
 

@@ -5,6 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Spotify Player</title>
+  <style>
+    #playButton, #pauseButton {
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <div>
@@ -15,7 +20,8 @@
   </div>
   <div>
     <button id="skipBackward">Skip Backward</button>
-    <button id="playPause">Play/Pause</button>
+    <button id="playButton">Play </button>
+    <button id="pauseButton">Pause </button>
     <button id="skipForward">Skip Forward</button>
   </div>
   <script src="player.js"></script>
