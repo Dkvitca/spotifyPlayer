@@ -17,7 +17,7 @@ function updateTrackInfo(trackInfo: any) {
       pauseButton!.style.display = 'none';
     }
   }
-  
+ 
   // Event listeners for buttons
   document.getElementById("skipBackward")!.addEventListener("click", () => {
     // Add logic to skip backward
