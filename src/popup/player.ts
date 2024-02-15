@@ -5,9 +5,14 @@
 function updateTrackInfo(trackInfo: any) {
     document.getElementById("trackName")!.innerText = trackInfo.title;
     document.getElementById("artistName")!.innerText = trackInfo.artist.name;
+    
     const playButton = document.getElementById("playButton");
     const pauseButton = document.getElementById("pauseButton");
-
+    
+    const backgroundImage = document.getElementById("backgroundImage");
+    backgroundImage!.style.backgroundImage = `url('${trackInfo.coverPhoto}')`
+    backgroundImage!.style.backgroundSize = 'cover';
+    
     if(trackInfo.is_playing){
       playButton!.style.display = 'none';
       pauseButton!.style.display = 'inline-block'; 
