@@ -20,8 +20,13 @@ chrome.runtime.onMessage.addListener(async (req, sender, sendResponse) => {
         break;
       case "pause":
         await app.pauseTrack();
+        break;
       case "save":
         await app.save();
+        break;
+      case "unSave":
+        await app.unSave();
+        break;
       default:
         // Handle other messages if needed
         break;

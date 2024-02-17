@@ -4,7 +4,7 @@
   const redirectUrl  = encodeURI('https://hlhhbpmimmkpkafnaghimoahbabfcknc.chromiumapp.org/');
   const authorizationEndpoint = "https://accounts.spotify.com/authorize";
   const tokenEndpoint = "https://accounts.spotify.com/api/token";
-  const scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing';
+  const scope = 'user-library-modify user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing user-library-read';
   
 
   export async function authorizeSpotify(): Promise<{ code_verifier: string, authUrl: string }> {

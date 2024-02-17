@@ -73,7 +73,47 @@ export async function pause(deviceId: Device, accessToken: string) {
     }
 }
 
+export async function isSaved( id:string, accessToken: string,) {
+  const url = `https://api.spotify.com/v1/me/tracks/contains?ids=${id}`;
+
+  try {
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    
+    const data = await res.json();
+    console.log("data",data);
+    return data[0];
+  } catch (e) {
+    return;
+  }
+}
+
 export async function saveTrack(songInfo: TrackInfo, accessToken: string) {
+  const url = 'https://api.spotify.com/v1/me/tracks'
+
+  const postData = {
+    ids: [songInfo.id],
+  };
+
+  try {
+    const response =  await fetch(url, {
+      method: 'PUT',
+      body: JSON.stringify(postData),
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    console.log("response from save",response);
+  } catch (e) {
+    throw e;
+  }
+}
+
+export async function unSaveTrack(songInfo: TrackInfo, accessToken: string) {
   const url = 'https://api.spotify.com/v1/me/tracks';
 
   const postData = {
@@ -81,14 +121,16 @@ export async function saveTrack(songInfo: TrackInfo, accessToken: string) {
   };
 
   try {
-    return await fetch(url, {
-      method: 'PUT',
+    const response = await fetch(url, {
+      method: 'DELETE',
       body: JSON.stringify(postData),
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
+    console.log("response from unSave",response);
   } catch (e) {
     throw e;
   }
 }
+

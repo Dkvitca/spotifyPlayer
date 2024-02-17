@@ -1,5 +1,5 @@
 import { TrackInfo, Device, PlayPostData,UserInstance } from './interface';
-import { getCurrentlyPlaying, next, previous, play, pause,saveTrack } from './spotify';
+import { getCurrentlyPlaying, next, previous, play, pause,saveTrack,unSaveTrack,isSaved } from './spotify';
 import { parseDevice, parsePlayPostData, parseShow, parseTrackInfo } from './parse';
 import { refreshToken } from './authorization';
 import { Storage } from './Storage';
@@ -14,15 +14,15 @@ export class App {
   }
 
   public async render(): Promise<void> {
+    console.log("this.trackInfo",this.trackInfo);
     const access_token = await Storage.get("access_token");
     if (!access_token || !this.isValidAccessToken(access_token)) { // test current access token before making requests.
         await this.refreshTokenAndRender()
         return;
     }
-
     const result = await getCurrentlyPlaying(access_token);
     if (result.item && (result.item !== this.trackInfo)) {
-      if (result.currently_playing_type=== 'episode'){
+      if (result.currently_playing_type === 'episode'){
         this.trackInfo=parseShow(result);
         this.device=parseDevice(result);
         Storage.set("trackInfo", this.trackInfo);
@@ -35,6 +35,7 @@ export class App {
         Storage.set("device", this.device);
       }
     } 
+    this.trackInfo!.isSave = await isSaved(result.item.id,access_token)
     chrome.runtime.sendMessage({message: "updateUI",trackInfo:this.trackInfo})
   }
 
@@ -81,9 +82,24 @@ export class App {
   }
 
   public async save(): Promise<void> {
+    console.log("from save");
     const access_token = await Storage.get("access_token");
+    if (this.trackInfo!){
+      await saveTrack(this.trackInfo,access_token);
+    }
     
-    await saveTrack(this.trackInfo!,access_token);
+    setTimeout(async () => {//render on delay
+        await this.render();
+      }, 200);
+  }
+
+  public async unSave(): Promise<void> {
+    console.log("from unsave");
+    const access_token = await Storage.get("access_token");
+
+    if (this.trackInfo){
+      await unSaveTrack(this.trackInfo,access_token);
+    }
     
     setTimeout(async () => {//render on delay
         await this.render();
