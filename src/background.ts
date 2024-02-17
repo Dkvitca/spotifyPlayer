@@ -1,6 +1,7 @@
 import { authorizeSpotify, getToken } from './scripts/authorization';
 import {App} from './scripts/app.js'
 import  {Storage} from './scripts/Storage'
+
 const app = new App();
 
 chrome.runtime.onMessage.addListener(async (req, sender, sendResponse) => {
@@ -19,6 +20,8 @@ chrome.runtime.onMessage.addListener(async (req, sender, sendResponse) => {
         break;
       case "pause":
         await app.pauseTrack();
+      case "save":
+        await app.save();
       default:
         // Handle other messages if needed
         break;

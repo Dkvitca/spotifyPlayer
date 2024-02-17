@@ -1,18 +1,16 @@
 import { TrackInfo, Device, PlayPostData,UserInstance } from './interface';
-import { getCurrentlyPlaying, next, previous, play, pause, } from './spotify';
-import { parseDevice, parsePlayPostData, parseTrackInfo } from './parse';
+import { getCurrentlyPlaying, next, previous, play, pause,saveTrack } from './spotify';
+import { parseDevice, parsePlayPostData, parseShow, parseTrackInfo } from './parse';
 import { refreshToken } from './authorization';
 import { Storage } from './Storage';
 
 export class App {
   private trackInfo: TrackInfo | null;
   private device: Device | null;
-  private playPostData: PlayPostData | null;
 
   constructor() {
     this.trackInfo = null;
     this.device = null;
-    this.playPostData = null;
   }
 
   public async render(): Promise<void> {
@@ -21,25 +19,22 @@ export class App {
         await this.refreshTokenAndRender()
         return;
     }
-    try {
-        const result = await getCurrentlyPlaying(access_token);
-    
-        if (result) {
-          if (result.item && result.item !== this.trackInfo) {
-            // Update if there is a new playback item
-            this.trackInfo = parseTrackInfo(result);
-            this.device = parseDevice(result);
-            Storage.set("trackInfo", this.trackInfo);
-            Storage.set("device", this.device);
-          } else if (!result.item && this.trackInfo) {
-            // Use the last known state if there is no playback item
-            this.trackInfo.is_playing = false; // Assume it's paused
-          }
-        }
-      } catch (e) {
-        console.log("Error getting current playback:", e);
-      }
 
+    const result = await getCurrentlyPlaying(access_token);
+    if (result.item && (result.item !== this.trackInfo)) {
+      if (result.currently_playing_type=== 'episode'){
+        this.trackInfo=parseShow(result);
+        this.device=parseDevice(result);
+        Storage.set("trackInfo", this.trackInfo);
+        Storage.set("device", this.device);
+      }
+      else{
+        this.trackInfo = parseTrackInfo(result);
+        this.device = parseDevice(result);
+        Storage.set("trackInfo", this.trackInfo);
+        Storage.set("device", this.device);
+      }
+    } 
     chrome.runtime.sendMessage({message: "updateUI",trackInfo:this.trackInfo})
   }
 
@@ -85,17 +80,28 @@ export class App {
       }, 200);
   }
 
+  public async save(): Promise<void> {
+    const access_token = await Storage.get("access_token");
+    
+    await saveTrack(this.trackInfo!,access_token);
+    
+    setTimeout(async () => {//render on delay
+        await this.render();
+      }, 200);
+  }
+
   private async isValidAccessToken(accessToken: string): Promise<boolean> {
+    console.log("isvalidaccessToken");
     try {
       const response = await fetch('https://api.spotify.com/v1/me', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      return response.status !== 401;
+      return response.status !== 200;
     } catch (error) {
       console.error('Error checking token validity:', error);
-      return false;
+      return true;
     }
   }
 

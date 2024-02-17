@@ -21,10 +21,16 @@ export interface Device {
     name?: string;
     url?: string;
   }
-  
+  interface Album {
+    name: string;
+    releaseDate: string;
+    href: string;
+  }
+
   export interface TrackInfo {
     title?: string;
     artist?: Artist;
+    album?: Album;
     repeatState?: string;
     is_playing?: boolean;
     coverPhoto?: string;
@@ -35,7 +41,7 @@ export interface Device {
     id?: string;
     isSave?: boolean;
     context?: {
-      type: 'artist' | 'playlist' | 'album';
+      type: 'artist' | 'playlist' | 'album' | 'show';
       href: string;
       externalUrls: {
         spotify: string;

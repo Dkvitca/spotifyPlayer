@@ -1,18 +1,27 @@
-
   chrome.runtime.sendMessage({message: "render app"})
-  console.log("from popup sendMessage: render app PRESSED!");
+
 
 function updateTrackInfo(trackInfo: any) {
+  console.log("trackinfo from player",trackInfo);
+  if (trackInfo.context.type === 'show'){
+    document.getElementById("album")!.style.display = 'none'
+    document.getElementById("year")!.style.display = 'none'
+  }
+  else{
+    document.getElementById("album")!.innerText = trackInfo.album.name;
+    document.getElementById("year")!.innerText = trackInfo.album.releaseDate;
+  }
     document.getElementById("trackName")!.innerText = trackInfo.title;
     document.getElementById("artistName")!.innerText = trackInfo.artist.name;
     
+
     const playButton = document.getElementById("playButton");
     const pauseButton = document.getElementById("pauseButton");
     
     const backgroundImage = document.getElementById("backgroundImage");
     backgroundImage!.style.backgroundImage = `url('${trackInfo.coverPhoto}')`
     backgroundImage!.style.backgroundSize = 'cover';
-    
+
     if(trackInfo.is_playing){
       playButton!.style.display = 'none';
       pauseButton!.style.display = 'inline-block'; 
@@ -48,7 +57,11 @@ function updateTrackInfo(trackInfo: any) {
     chrome.runtime.sendMessage({message: "play"})
   });
   
+  document.getElementById("addToMySongs"!)?.addEventListener("click", () =>{
 
+    console.log("addToMySongs clicked");
+    chrome.runtime.sendMessage({message: "save"});
+  });
   
   chrome.runtime.onMessage.addListener(async (req)=>{
     if (req.message === 'updateUI'){
@@ -62,6 +75,7 @@ function updateTrackInfo(trackInfo: any) {
       console.log("from timer calling to render app")
       clearTimeout(timer);
       chrome.runtime.sendMessage({message: "render app"});
+      console.log("duration-progress",durationMs-progressMs);
     }, durationMs - progressMs);
   }
 

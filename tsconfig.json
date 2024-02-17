@@ -11,7 +11,7 @@
     "isolatedModules": true,
     "declaration": false,
     "allowSyntheticDefaultImports": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]

@@ -1,7 +1,7 @@
 import {TrackInfo,PlayPostData,Device} from './interface'
 
 export async function getCurrentlyPlaying(access_token:string): Promise<any>{
-    const result = await fetch("https://api.spotify.com/v1/me/player", {
+    const result = await fetch("https://api.spotify.com/v1/me/player?additional_types=track,episode", {
       method: "Get",
       headers:{
         Authorization: `Bearer ${access_token}`
@@ -71,4 +71,24 @@ export async function pause(deviceId: Device, accessToken: string) {
     } catch (e) {
         throw e;
     }
+}
+
+export async function saveTrack(songInfo: TrackInfo, accessToken: string) {
+  const url = 'https://api.spotify.com/v1/me/tracks';
+
+  const postData = {
+    ids: [songInfo.id],
+  };
+
+  try {
+    return await fetch(url, {
+      method: 'PUT',
+      body: JSON.stringify(postData),
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  } catch (e) {
+    throw e;
+  }
 }
