@@ -1,7 +1,7 @@
 
   // src/spotifyAuth.ts
-  const clientId = encodeURI('8c6d2db1da4b4290903abb3d63dda6ce'); // your clientId
-  const redirectUrl  = encodeURI('https://hlhhbpmimmkpkafnaghimoahbabfcknc.chromiumapp.org/');
+  const clientId = encodeURI('your client ID'); // your clientId
+  const redirectUrl  = encodeURI('Your chrome extension URL');
   const authorizationEndpoint = "https://accounts.spotify.com/authorize";
   const tokenEndpoint = "https://accounts.spotify.com/api/token";
   const scope = 'user-library-modify user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing user-library-read';
